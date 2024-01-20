@@ -8,9 +8,11 @@ Rails.application.routes.draw do
         passwords: 'api/v1/passwords'
       }
 
-      resources :chat_rooms do
-        resources :chat_messages
+      resources :chat_rooms, only: %i[index create] do
+        resources :chat_messages, only: %i[index create], shallow: true
       end
+
+      resources :users, only: %i[index show update]
     end
   end
 end

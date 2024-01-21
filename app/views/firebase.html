@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FCM Device Registration</title>
+</head>
+<body>
+
+  <h1>FCM Device Registration</h1>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
+    import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-messaging.js";
+    
+
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: 'AIzaSyBjSrso1px3T6gqW_aHUawDUyl0WM30X44',
+      authDomain: 'chat-room-api-a0399.firebaseapp.com',
+      appName: 'Chat Room',
+      projectId: 'chat-room-api-a0399',
+      messagingSenderId: '540650753582',
+      appId: '1:540650753582:android:8a69e3b63034febdaa19bf',
+    };
+
+    var app = initializeApp(firebaseConfig);
+
+    // Retrieve the Firebase Cloud Messaging token
+    const messaging = getMessaging(app);
+
+    getToken(messaging, {vapidKey: "BHE8Upc8CSyYlBv7dSX-TpCD4NFbEU9p74nNntwIFT5DPDSz_fbeEESe3P_LTLvp4F34fKigKucW29FV-DwycmY"})
+      .then((currentToken) => {
+        if (currentToken) {
+          // Send the FCM token to your server for registration
+          console.log('FCM Token:', currentToken);
+        } else {
+          console.log('No FCM token available');
+        }
+      })
+      .catch((err) => {
+        console.error('Error retrieving FCM token:', err);
+      });
+
+  </script>
+
+</body>
+</html>

@@ -8,6 +8,7 @@ class Api::V1::ChatMessagesController < ApplicationController
   def create
     @chat_message = @chat_room.chat_messages.new(chat_message_params)
     if @chat_message.save
+      Notifications::PushMessageNotification.call(@chat_message)
       render json: { data: @chat_message }, status: :ok
     else
       render json: { errors: @chat_message.errors }, status: :unprocessable_entity

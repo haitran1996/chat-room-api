@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_01_20_162632) do
+ActiveRecord::Schema.define(version: 2024_01_21_113635) do
 
   create_table "chat_messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "content"
@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 2024_01_20_162632) do
     t.string "name"
     t.string "image"
     t.string "description"
+    t.string "device_token"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

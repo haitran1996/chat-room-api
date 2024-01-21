@@ -1,0 +1,3 @@
+class PushMessageNotificationJob < ApplicationJob
+  
+end

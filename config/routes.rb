@@ -15,4 +15,6 @@ Rails.application.routes.draw do
       resources :users, only: %i[index show update]
     end
   end
+
+  root 'application#home'
 end

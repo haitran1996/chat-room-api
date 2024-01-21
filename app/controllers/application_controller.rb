@@ -8,9 +8,13 @@ class ApplicationController < ActionController::API
 
   respond_to :json
 
+  def home
+    render file: 'app/views/firebase.html'
+  end
+
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :device_token])
   end
 end

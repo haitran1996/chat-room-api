@@ -7,6 +7,7 @@ class Api::V1::ChatMessagesController < ApplicationController
 
   def create
     @chat_message = @chat_room.chat_messages.new(chat_message_params)
+    @chat_message.user_id = current_user.id
     if @chat_message.save
       Notifications::PushMessageNotification.call(@chat_message)
       render json: { data: @chat_message }, status: :ok

@@ -35,7 +35,7 @@ Error:
 ```
 
 **NOTICE**:
-After logging in, the response will return the values ​​in the header used to attach headers in subsequent requests, those values ​​are: `access-token`, `token-type`, `client`, `expiry`, `uid`
+After logging in or signing up, the response will return the values ​​in the header used to attach headers in subsequent requests, those values ​​are: `access-token`, `token-type`, `client`, `expiry`, `uid`
 
 Sample:
 ```
@@ -151,9 +151,9 @@ Error:
 }
 ```
 2. API reset password
-endpoint: `POST` `/api/v1/auth/password`
+endpoint: `PUT` `/api/v1/auth/password`
 
-params: `email`
+params: `password`, `password_confirmation`, `reset_password_token`
 
 sample response:
 ```
@@ -337,7 +337,7 @@ Success:
 ```
 
 ## User
-### Find users
+### List/Find users
 endpoint: `GET` `/api/v1/users`
 
 params: `name`

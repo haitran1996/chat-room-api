@@ -7,9 +7,9 @@ class Api::V1::ChatRoomsController < ApplicationController
     @chat_room = current_user.chat_rooms.new(chat_room_params)
     @chat_room.chat_participants.new(user_id: current_user.id) if @chat_room.chat_participants.map(&:user_id).exclude?(current_user.id)
     if @chat_room.save
-      render json: { data: @chat_room }, status: :ok
+      render_json(data: @user, status: 200)
     else
-      render json: { errors: @chat_room.errors }, status: :unprocessable_entity
+      render_json(status: 422, errors: @user.errors.full_messages)
     end
   end
 

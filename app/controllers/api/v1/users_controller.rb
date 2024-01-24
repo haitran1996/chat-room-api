@@ -10,9 +10,9 @@ class Api::V1::UsersController < ApplicationController
   def update
     @user = current_user
     if @user.update(user_params)
-      render json: { data: @user }, status: :ok
+      render_json(data: @user, status: 200)
     else
-      render json: { errors: @user.errors }, status: :unprocessable_entity
+      render_json(status: 422, errors: @user.errors.full_messages)
     end
   end
 

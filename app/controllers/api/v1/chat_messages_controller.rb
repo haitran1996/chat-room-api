@@ -10,9 +10,9 @@ class Api::V1::ChatMessagesController < ApplicationController
     @chat_message.user_id = current_user.id
     if @chat_message.save
       Notifications::PushMessageNotification.call(@chat_message)
-      render json: { data: @chat_message }, status: :ok
+      render_json(data: @chat_message, status: 200)
     else
-      render json: { errors: @chat_message.errors }, status: :unprocessable_entity
+      render_json(status: 422, @chat_message.errors.full_messages)
     end
   end
 

@@ -12,7 +12,7 @@ class Api::V1::ChatMessagesController < ApplicationController
       Notifications::PushMessageNotification.call(@chat_message)
       render_json(data: @chat_message, status: 200)
     else
-      render_json(status: 422, @chat_message.errors.full_messages)
+      render_json(status: 422, errors: @chat_message.errors.full_messages)
     end
   end
 

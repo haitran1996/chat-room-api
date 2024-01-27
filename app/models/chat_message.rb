@@ -6,6 +6,8 @@ class ChatMessage < ApplicationRecord
   belongs_to :user
   belongs_to :chat_room
 
+  validates :content, presence: true
+
   def recipients
     chat_room.users.reject { |u| u.id == user.id }
   end

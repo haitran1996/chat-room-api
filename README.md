@@ -1,5 +1,79 @@
 # Chat Room API
 
+## Sample response:
+
+```
+# format
+{
+    "code": <http status code>,
+    "message": <String>,
+    "data": <Array Object/Object>,
+    "errors": <Array String>
+}
+
+# Success
+{
+    "code": 200,
+    "message": <String>,
+    "data": {
+        "email": "user_3@gmail.com",
+        "provider": "email",
+        "uid": "user_3@gmail.com",
+        "image": {
+            "url": null
+        },
+        "id": 3,
+        "allow_password_change": false,
+        "name": null,
+        "description": null,
+        "device_token": null
+    },
+    "errors": null
+}
+
+# Error
+{
+    "code": 401,
+    "message": null,
+    "data": null,
+    "errors": [
+        "Invalid login credentials. Please try again."
+    ]
+}
+
+# unexpected error
+{
+    "status": 404,
+    "error": "Not Found",
+    "exception": "#<ActiveRecord::RecordNotFound: Couldn't find User with 'id'=10>",
+    "traces": {
+        "Application Trace": [
+            {
+                "exception_object_id": 49460,
+                "id": 1,
+                "trace": "app/controllers/api/v1/users_controller.rb:7:in `show'"
+            }
+        ],
+        "Framework Trace": [
+            {
+                "exception_object_id": 49460,
+                "id": 0,
+                "trace": "activerecord (6.1.7.6) lib/active_record/core.rb:353:in `find'"
+            },
+            ....
+        ],
+        "Full Trace": [
+            {
+                "exception_object_id": 49460,
+                "id": 0,
+                "trace": "activerecord (6.1.7.6) lib/active_record/core.rb:353:in `find'"
+            },
+            ....
+        ]
+    }
+}
+```
+
 ## Authenticate
 ### Login
 endpoint: `POST` `/api/v1/auth/sign_in`
@@ -8,43 +82,37 @@ params: `email`, `password`, `device_token` (device_token is required to push no
 
 sample response:
 ```
-Success:
 {
+    "code": 200,
+    "message": null,
     "data": {
-        "email": "user_01@gmail.com",
+        "email": "user_3@gmail.com",
         "provider": "email",
-        "uid": "user_01@gmail.com",
+        "uid": "user_3@gmail.com",
         "image": {
-            "url": "/uploads/user/image/1/avatar.jpg"
+            "url": null
         },
-        "id": 1,
-        "allow_password_change": true,
-        "name": "Nakajima",
-        "description": "Hello world!!",
-        "device_token": "xxxx"
-    }
-}
-
-Error:
-{
-    "success": false,
-    "errors": [
-        "Invalid login credentials. Please try again."
-    ]
+        "id": 3,
+        "allow_password_change": false,
+        "name": null,
+        "description": null,
+        "device_token": null
+    },
+    "errors": null
 }
 ```
 
 **NOTICE**:
-After logging in or signing up, the response will return the values ​​in the header used to attach headers in subsequent requests, those values ​​are: `access-token`, `token-type`, `client`, `expiry`, `uid`
+After logging in or signing up, the response will return the values ​​in the header used to attach headers in subsequent requests, those values ​​are: `access-token`,  `client`, `uid`
 
 Sample:
 ```
 access-token:_vG4Nybdk6ejVt6hPvFKHg
-token-type:Bearer
 client:eYT7CGm09cICrHDZ9a8POQ
-expiry:1707047022
 uid:user_01@gmail.com
 ```
+
+If the token expires, a new token will be reset in the headers. Save the new `access-token`, `client` and `uid`` for the next requests.
 
 ### Sign up
 endpoint: `POST` `/api/v1/auth`
@@ -53,9 +121,9 @@ params: `name`, `email`, `password`, `device_token` (device_token is required to
 
 sample response:
 ```
-Success:
 {
-    "status": "success",
+    "code": 200,
+    "message": null,
     "data": {
         "id": 4,
         "email": "user_05@gmail.com",
@@ -70,35 +138,8 @@ Success:
         },
         "description": null,
         "device_token": "xxx"
-    }
-}
-
-Error:
-{
-    "status": "error",
-    "data": {
-        "id": null,
-        "email": "user_01@gmail.com",
-        "created_at": null,
-        "updated_at": null,
-        "provider": "email",
-        "uid": "",
-        "allow_password_change": false,
-        "name": "Takeuchi",
-        "image": {
-            "url": null
-        },
-        "description": null,
-        "device_token": "xxx"
     },
-    "errors": {
-        "email": [
-            "has already been taken"
-        ],
-        "full_messages": [
-            "Email has already been taken"
-        ]
-    }
+    "errors": null
 }
 ```
 
@@ -108,17 +149,11 @@ endpoint: `DELTE` `/api/v1/auth/sign_out`
 
 sample response:
 ```
-Success:
 {
-    "success": true
-}
-
-Error:
-{
-    "success": false,
-    "errors": [
-        "User was not found or was not logged in."
-    ]
+    "code": 200,
+    "message": null,
+    "data": null,
+    "errors": null
 }
 ```
 
@@ -136,18 +171,11 @@ params: `email`
 
 sample response:
 ```
-Success:
 {
-    "success": true,
-    "message": "An email has been sent to 'user_05@gmail.com' containing instructions for resetting your password."
-}
-
-Error:
-{
-    "success": false,
-    "errors": [
-        "Unable to find user with email 'user_06@gmail.com'."
-    ]
+    "code": 200,
+    "message": "An email has been sent to 'user_3@gmail.com' containing instructions for resetting your password.",
+    "data": null,
+    "errors": null
 }
 ```
 2. API reset password
@@ -157,9 +185,9 @@ params: `password`, `password_confirmation`, `reset_password_token`
 
 sample response:
 ```
-Success:
 {
-    "success": true,
+    "code": 200,
+    "message": "Your password has been successfully updated.",
     "data": {
         "email": "user_05@gmail.com",
         "provider": "email",
@@ -175,15 +203,7 @@ Success:
         "description": null,
         "device_token": "xxx"
     },
-    "message": "Your password has been successfully updated."
-}
-
-Error:
-{
-    "success": false,
-    "errors": [
-        "You must fill out the fields labeled 'Password' and 'Password confirmation'."
-    ]
+    "errors": null
 }
 ```
 
@@ -193,9 +213,11 @@ endpoint: `GET` `/api/v1/chat_rooms`
 
 sample response:
 ```
-Success:
-[
-    {
+{
+    "code": 200,
+    "message": null,
+    "data": [
+        {
         "id": 4,
         "name": "Room 1",
         "created_at": "2024-01-20T15:15:52.144Z",
@@ -242,7 +264,9 @@ Success:
             "reply_to_message_id": null
         }
     }
-]
+    ],
+    "errors": null
+}
 ```
 ### Create room
 endpoint: `POST` `/api/v1/chat_rooms/`
@@ -262,21 +286,19 @@ sample params:
 
 sample response:
 ```
-Success:
 {
+    "code": 200,
+    "message": null,
     "data": {
-        "id": 6,
-        "name": "Room B",
-        "created_at": "2024-01-21T13:16:15.551Z",
-        "updated_at": "2024-01-21T13:16:15.551Z"
-    }
-}
-
-Errors:
-{
-  error: 'xxx'
+        "id": 2,
+        "name": "Room C",
+        "created_at": "2024-02-01T15:52:56.123Z",
+        "updated_at": "2024-02-01T15:52:56.123Z"
+    },
+    "errors": null
 }
 ```
+
 ## Chat Message
 ### Create Message
 endpoint: `POST` `/api/v1/chat_rooms/<room_id>/chat_messages`
@@ -285,24 +307,19 @@ params: `content`, `reply_to_message_id` (optional)
 
 sample response:
 ```
-Success:
 {
+    "code": 200,
+    "message": null,
     "data": {
-        "id": 14,
+        "id": 2,
         "content": "i miss you",
-        "user_id": 1,
-        "chat_room_id": 4,
-        "created_at": "2024-01-21T12:49:49.116Z",
-        "updated_at": "2024-01-21T12:49:49.116Z",
+        "user_id": 3,
+        "chat_room_id": 2,
+        "created_at": "2024-02-01T15:53:45.779Z",
+        "updated_at": "2024-02-01T15:53:45.779Z",
         "reply_to_message_id": null
-    }
-}
-
-Error:
-{
-    "errors": [
-        "xxx"
-    ]
+    },
+    "errors": null
 }
 ```
 
@@ -311,28 +328,21 @@ endpoint: `GET` `/api/v1/chat_rooms/<room_id>/chat_messages`
 
 sample response:
 ```
-Success:
 {
-  "data": [
-      {
-          "id": 3,
-          "content": "Hello!!",
-          "user_id": 1,
-          "chat_room_id": 4,
-          "created_at": "2024-01-20T15:34:52.485Z",
-          "updated_at": "2024-01-20T15:34:52.485Z",
-          "reply_to_message_id": null
-      },
-      {
-          "id": 4,
-          "content": "Hello!!",
-          "user_id": 2,
-          "chat_room_id": 4,
-          "created_at": "2024-01-20T15:35:06.841Z",
-          "updated_at": "2024-01-20T15:35:06.841Z",
-          "reply_to_message_id": 1
-      },
-  ]
+    "code": 200,
+    "message": null,
+    "data": [
+        {
+            "id": 2,
+            "content": "i miss you",
+            "user_id": 3,
+            "chat_room_id": 2,
+            "created_at": "2024-02-01T15:53:45.779Z",
+            "updated_at": "2024-02-01T15:53:45.779Z",
+            "reply_to_message_id": null
+        }
+    ],
+    "errors": null
 }
 ```
 
@@ -344,25 +354,42 @@ params: `name`
 
 sample response:
 ```
-Success:
 {
+    "code": 200,
+    "message": null,
     "data": [
         {
             "id": 1,
-            "email": "user_01@gmail.com",
-            "created_at": "2024-01-20T04:31:12.484Z",
-            "updated_at": "2024-01-21T12:32:32.515Z",
+            "email": "user1111@gmail.com",
+            "created_at": "2024-01-27T16:10:49.353Z",
+            "updated_at": "2024-01-27T16:27:25.084Z",
             "provider": "email",
-            "uid": "user_01@gmail.com",
-            "allow_password_change": true,
+            "uid": "user1111@gmail.com",
+            "allow_password_change": false,
             "name": "Nakajima",
             "image": {
-                "url": "/uploads/user/image/1/avatar.jpg"
+                "url": null
             },
-            "description": "Hello world!!",
+            "description": null,
+            "device_token": null
+        },
+        {
+            "id": 2,
+            "email": "user_2@gmail.com",
+            "created_at": "2024-01-27T16:13:58.491Z",
+            "updated_at": "2024-01-27T18:27:55.169Z",
+            "provider": "email",
+            "uid": "user_2@gmail.com",
+            "allow_password_change": false,
+            "name": "Nakajima",
+            "image": {
+                "url": null
+            },
+            "description": null,
             "device_token": null
         }
-    ]
+    ],
+    "errors": null
 }
 ```
 ### Profile
@@ -373,21 +400,24 @@ sample response:
 ```
 Success:
 {
+    "code": 200,
+    "message": null,
     "data": {
-        "id": 1,
-        "email": "user_01@gmail.com",
-        "created_at": "2024-01-20T04:31:12.484Z",
-        "updated_at": "2024-01-21T12:32:32.515Z",
+        "id": 3,
+        "email": "user_3@gmail.com",
+        "created_at": "2024-01-27T16:18:25.118Z",
+        "updated_at": "2024-02-01T15:51:30.690Z",
         "provider": "email",
-        "uid": "user_01@gmail.com",
-        "allow_password_change": true,
-        "name": "Nakajima",
+        "uid": "user_3@gmail.com",
+        "allow_password_change": false,
+        "name": null,
         "image": {
-            "url": "/uploads/user/image/1/avatar.jpg"
+            "url": null
         },
-        "description": "Hello world!!",
+        "description": null,
         "device_token": null
-    }
+    },
+    "errors": null
 }
 ```
 
@@ -398,29 +428,24 @@ params: `name`, `description`, `image`
 
 sample response:
 ```
-Success:
 {
+    "code": 200,
+    "message": null,
     "data": {
-        "id": 1,
-        "email": "user_01@gmail.com",
-        "created_at": "2024-01-20T04:31:12.484Z",
-        "updated_at": "2024-01-21T12:32:32.515Z",
+        "id": 3,
+        "email": "user_3@gmail.com",
+        "created_at": "2024-01-27T16:18:25.118Z",
+        "updated_at": "2024-02-01T15:51:30.690Z",
         "provider": "email",
-        "uid": "user_01@gmail.com",
-        "allow_password_change": true,
-        "name": "Nakajima",
+        "uid": "user_3@gmail.com",
+        "allow_password_change": false,
+        "name": null,
         "image": {
-            "url": "/uploads/user/image/1/avatar.jpg"
+            "url": null
         },
-        "description": "Hello world!!",
+        "description": null,
         "device_token": null
-    }
-}
-
-Error:
-{
-    "errors": [
-        "xxx"
-    ]
+    },
+    "errors": null
 }
 ```

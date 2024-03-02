@@ -3,7 +3,7 @@ class Api::V1::RegistrationsController < ::DeviseTokenAuth::RegistrationsControl
 
   def create
     super do |resource|
-      resource
+      resource.update device_token: sign_up_params[:device_token]
     end
   end
 

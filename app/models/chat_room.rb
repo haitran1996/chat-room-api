@@ -9,6 +9,8 @@ class ChatRoom < ApplicationRecord
 
   has_one :last_message, -> { order(id: :desc) }, class_name: 'ChatMessage'
 
+  mount_uploader :image, ChatRoomImageUploader
+
   accepts_nested_attributes_for :chat_participants
 
   validate :must_greater_than_2_users

@@ -22,9 +22,7 @@ class Notifications::PushMessageNotification < ApplicationService
     message = {
       # 'topic': "89023", # OR token if you want to send to a specific device
       'token': device_token,
-      # 'data': {
-      #   payload: payload_json
-      # },
+      'data': payload_json,
       'notification': notification,
       'android': {
         'notification': {
@@ -54,10 +52,6 @@ class Notifications::PushMessageNotification < ApplicationService
   end
 
   def payload_json
-    {
-      data: {
-        id: 1
-      }
-    }.to_json
+    @message.to_json
   end
 end

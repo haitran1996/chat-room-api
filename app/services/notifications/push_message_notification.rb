@@ -11,9 +11,11 @@ class Notifications::PushMessageNotification < ApplicationService
       ENV['FIREBASE_CREDENTIALS_PATH'],
       ENV['FIREBASE_PROJECT_ID'],
     )
+    Rails.logger.info 'Start pushing notification ======'
     @message.recipients.pluck(:device_token).each do |token|
-      fcm.send_v1(message(token))
+      Rails.logger.info fcm.send_v1(message(token))
     end
+    Rails.logger.info 'End pushing notification ======'
   end
 
   private
@@ -22,7 +24,9 @@ class Notifications::PushMessageNotification < ApplicationService
     message = {
       # 'topic': "89023", # OR token if you want to send to a specific device
       'token': device_token,
-      'data': payload_json,
+      'data': {
+        payload: payload_json
+      },
       'notification': notification,
       'android': {
         'notification': {
